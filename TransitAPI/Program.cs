@@ -1,5 +1,7 @@
 
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 using TransitAPI.Models;
 
@@ -10,6 +12,10 @@ namespace TransitAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration["Transit:ConnectionString"];
+
+            var contextOptions = new DbContextOptionsBuilder<TransitContext>()
+                .UseSqlServer(connectionString).Options;
 
             //builder.Services.AddCors(options =>
             //{
@@ -59,9 +65,10 @@ namespace TransitAPI
 
                     if (bounds != null)
                     {
-                        using (var x = new TransitContext())
+                        using (var x = new TransitContext(contextOptions))
                         {
                             var y = x.GetProcedures();
+                            // https://localhost:7239/entities?bounds={%22South%22:43.5,%22West%22:-79.6,%22North%22:43.6,%22East%22:-79.5}
                             //var z = y.GetRelevantEntitiesAsync(43.6, -79.5, 43.5, -79.6).GetAwaiter().GetResult();
                             entities = y.GetRelevantEntitiesAsync(bounds.North, bounds.East, bounds.South, bounds.West)
                                 .GetAwaiter().GetResult();
