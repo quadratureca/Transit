@@ -12,6 +12,7 @@ namespace TransitAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             var connectionString = builder.Configuration["Transit:ConnectionString"];
 
             var contextOptions = new DbContextOptionsBuilder<TransitContext>()

@@ -9,9 +9,9 @@ using TransitWorker.Models;
 
 namespace TransitWorker
 {
-    class York : IParser
+    class YRT : IParser
     {
-        public void Parse(FeedMessage message)
+        public void Parse(FeedMessage message, string databaseConnection)
         {
             var Entities = new List<Entity>();
             DateTime now = DateTime.UtcNow;
@@ -22,7 +22,7 @@ namespace TransitWorker
                 {
                     Id = Guid.NewGuid(),
                     VehicleId = entity.Vehicle.Vehicle.Id,
-                    AgencyId = "York",
+                    AgencyId = "YRT",
                     VehicleLabel = entity.Vehicle.Vehicle.Label,
                     Timestamp = (long)entity.Vehicle.Timestamp,
                     RouteId = entity.Vehicle.Trip.RouteId,
@@ -37,10 +37,8 @@ namespace TransitWorker
                 };
                 Entities.Add(e);
             }
-            // ;TrustServerCertificate=true
-            string connectionString = "Data Source=DapabaseAddress;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=SQLPassword;TrustServerCertificate=true";
 
-            var copy = new SqlBulkCopy(connectionString);
+            var copy = new SqlBulkCopy(databaseConnection);
 
             copy.DestinationTableName = "dbo.Entity";
             copy.ColumnMappings.Add(nameof(Entity.Id), "Id");

@@ -64,6 +64,11 @@
         function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
             var canvas, ctx;
 
+            if (routeColor == null || routeTextColor == null) {
+                routeColor = '404040';
+                routeTextColor = 'FFFFFF';
+            }
+
             canvas = document.createElement("canvas");
             canvas.width = 48;
             canvas.height = 48;
@@ -170,7 +175,6 @@
         function update(entities) {
             let meIndex;
             let incomingEntities = [];
-            debugger;
             entities.forEach(function (entity, index) {
                 incomingEntities.push(entity);
             });

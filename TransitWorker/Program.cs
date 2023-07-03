@@ -4,7 +4,8 @@ IHost host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
     .ConfigureServices(services =>
     {
-        services.AddHostedService<Worker>();
+        services.AddHostedService<RealTime>();
+        services.AddHostedService<Route>();
     })
     .Build();
 

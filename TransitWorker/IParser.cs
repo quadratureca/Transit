@@ -10,6 +10,6 @@ namespace TransitWorker
 {
     interface IParser
     {
-        void Parse(FeedMessage message);
+        void Parse(FeedMessage message, string DatabaseConnection);
     }
 }
