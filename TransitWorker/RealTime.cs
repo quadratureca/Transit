@@ -101,7 +101,7 @@ public class RealTime : BackgroundService
                 }
                 finally
                 {
-                    await Task.Delay(10000, stoppingToken);
+                    await Task.Delay(15000, stoppingToken);
                 }
             } // end while
         }
