@@ -73,7 +73,7 @@ public class RealTime : BackgroundService
                     {
                         var x = client.GetStreamAsync(yrt);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
-                        GetCity(message, new YRT(), databaseConnection);
+                        GetCity(message, new YRTX(), databaseConnection);
                     }
                     catch (Exception ex)
                     {

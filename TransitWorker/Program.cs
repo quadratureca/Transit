@@ -6,6 +6,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services.AddHostedService<Mississauga>();
         services.AddHostedService<GoTransit>();
+        services.AddHostedService<YRT>();
         //services.AddHostedService<RealTime>();
         //services.AddHostedService<Route>();
     })
