@@ -51,7 +51,7 @@ public class RealTime : BackgroundService
                     {
                         var x = client.GetStreamAsync(goTransit);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
-                        GetCity(message, new GOTransit(), databaseConnection);
+                        GetCity(message, new GOTransitX(), databaseConnection);
                     }
                     catch (Exception ex)
                     {
@@ -62,7 +62,7 @@ public class RealTime : BackgroundService
                     {
                         var x = client.GetStreamAsync(mississauga);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
-                        GetCity(message, new Mississauga(), databaseConnection);
+                        GetCity(message, new MississaugaX(), databaseConnection);
                     }
                     catch (Exception ex)
                     {

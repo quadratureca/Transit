@@ -4,8 +4,10 @@ IHost host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
     .ConfigureServices(services =>
     {
-        services.AddHostedService<RealTime>();
-        services.AddHostedService<Route>();
+        services.AddHostedService<Mississauga>();
+        services.AddHostedService<GoTransit>();
+        //services.AddHostedService<RealTime>();
+        //services.AddHostedService<Route>();
     })
     .Build();
 

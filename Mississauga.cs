@@ -12,24 +12,24 @@ using System.Collections.Generic;
 
 namespace TransitWorker;
 
-public class GoTransit : BackgroundService
+public class Mississauga : BackgroundService
 {
-    private readonly ILogger<GoTransit> _logger;
+    private readonly ILogger<Mississauga> _logger;
 
-    public GoTransit(ILogger<GoTransit> logger)
+    public Mississauga(ILogger<Mississauga> logger)
     {
         _logger = logger;
     }
 
 
-    //static void GetCity(FeedMessage message, IParser parser, string databaseConnection)
-    //{
-    //    IParser cityParser = parser as IParser;
-    //    if (cityParser != null)
-    //    {
-    //        cityParser.Parse(message, databaseConnection);
-    //    }
-    //}
+    static void GetCity(FeedMessage message, IParser parser, string databaseConnection)
+    {
+        IParser cityParser = parser as IParser;
+        if (cityParser != null)
+        {
+            cityParser.Parse(message, databaseConnection);
+        }
+    }
 
     static void Parse(FeedMessage message, string databaseConnection)
     {
@@ -38,21 +38,23 @@ public class GoTransit : BackgroundService
 
         foreach (var entity in message.Entities)
         {
-            Entity e = new Entity();
-            e.Id = Guid.NewGuid();
-            e.AgencyId = "GO";
-            e.VehicleId = entity.Vehicle.Vehicle.Id;
-            e.VehicleLabel = entity.Vehicle.Vehicle.Label;
-            e.Timestamp = (long)entity.Vehicle.Timestamp;
-            e.RouteId = entity.Vehicle.Trip.RouteId;
-            e.DirectionId = entity.Vehicle.Trip.DirectionId;
-            e.TripId = entity.Vehicle.Trip.TripId;
-            e.Bearing = entity.Vehicle.Position.Bearing;
-            e.BearingValid = false;
-            e.Latitude = entity.Vehicle.Position.Latitude;
-            e.Longitude = entity.Vehicle.Position.Longitude;
-            e.Created = now;
-            e.Deleted = false;
+            Entity e = new Entity
+            {
+                Id = Guid.NewGuid(),
+                VehicleId = entity.Vehicle.Vehicle.Id,
+                AgencyId = "mississauga-on-ca",
+                VehicleLabel = entity.Vehicle.Vehicle.Label,
+                Timestamp = (long)entity.Vehicle.Timestamp,
+                RouteId = entity.Vehicle.Trip.RouteId,
+                DirectionId = entity.Vehicle.Trip.DirectionId,
+                TripId = entity.Vehicle.Trip.TripId,
+                Bearing = entity.Vehicle.Position.Bearing,
+                BearingValid = true,
+                Latitude = entity.Vehicle.Position.Latitude,
+                Longitude = entity.Vehicle.Position.Longitude,
+                Created = now,
+                Deleted = false,
+            };
             Entities.Add(e);
         }
 
@@ -86,15 +88,15 @@ public class GoTransit : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("GoTransit running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Mississauga running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    //string mississauga = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
+                    string mississauga = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
                     //string yrt = "https://rtu.yrt.ca/gtfsrealtime/VehiclePositions";
-                    string goTransit = "http://api.openmetrolinx.com/OpenDataAPI/api/V1/Gtfs.proto/Feed/VehiclePosition?key=30023110";
+                    //string goTransit = "http://api.openmetrolinx.com/OpenDataAPI/api/V1/Gtfs.proto/Feed/VehiclePosition?key=30023110";
                     //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
                     //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
@@ -111,9 +113,9 @@ public class GoTransit : BackgroundService
 
                     try
                     {
-                        var x = client.GetStreamAsync(goTransit);
+                        var x = client.GetStreamAsync(mississauga);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
-                        Parse(message, databaseConnection);
+                        GetCity(message, new MississaugaX(), databaseConnection);
                     }
                     catch (Exception ex)
                     {
