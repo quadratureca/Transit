@@ -43,10 +43,26 @@ public class Mississauga : BackgroundService
 
     static void WriteRoutes(List<Route> routes, string databaseConnection)
     {
-        
+        var copy = new SqlBulkCopy(databaseConnection);
+
+        copy.DestinationTableName = "dbo.Route";
+        copy.ColumnMappings.Add(nameof(Route.id), "id");
+        copy.ColumnMappings.Add(nameof(Route.route_id), "route_id");
+        copy.ColumnMappings.Add(nameof(Route.agency_id), "agency_id");
+        copy.ColumnMappings.Add(nameof(Route.route_short_name), "route_short_name");
+        copy.ColumnMappings.Add(nameof(Route.route_long_name), "route_long_name");
+        copy.ColumnMappings.Add(nameof(Route.route_desc), "route_desc");
+        copy.ColumnMappings.Add(nameof(Route.route_type), "route_type");
+        copy.ColumnMappings.Add(nameof(Route.route_url), "route_url");
+        copy.ColumnMappings.Add(nameof(Route.route_color), "route_color");
+        copy.ColumnMappings.Add(nameof(Route.route_text_color), "route_text_color");
+        copy.ColumnMappings.Add(nameof(Route.route_sort_order), "route_sort_order");
+        copy.ColumnMappings.Add(nameof(Route.continuous_pickup), "continuous_pickup");
+        copy.ColumnMappings.Add(nameof(Route.continuous_drop_off), "continuous_drop_off");
+
+        copy.WriteToServer(routes.ToArray<Route>().ToDataTable());
+
     }
-
-
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -75,34 +91,35 @@ public class Mississauga : BackgroundService
                         Stream unzippedEntryStream; // Unzipped data from a file in the archive
 
                         ZipArchive archive = new ZipArchive(data);
-                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        ZipArchiveEntry entry = archive.Entries.FirstOrDefault(z => z.Name.Equals("routes.txt", StringComparison.OrdinalIgnoreCase));
+                        if (entry != null)
                         {
-                            if (entry.FullName.Equals("routes.txt", StringComparison.OrdinalIgnoreCase))
+                            unzippedEntryStream = entry.Open(); // .Open will return a stream
+                                                                // Process entry data here
+                            using (StreamReader sr = new StreamReader(unzippedEntryStream))
                             {
-                                unzippedEntryStream = entry.Open(); // .Open will return a stream
-                                                                    // Process entry data here
-                                using (StreamReader sr = new StreamReader(unzippedEntryStream))
+                                if (sr.Peek() != -1)
                                 {
-                                    if (sr.Peek() != 0)
+                                    // Read and discard header line
+                                    line = sr.ReadLine();
+                                }
+                                while (sr.Peek() != -1)
+                                {
+                                    line = sr.ReadLine();
+                                    if (line != null)
                                     {
-                                        // Read and discard header line
-                                        line = sr.ReadLine();
-                                    }
-                                    while (sr.Peek() != 0)
-                                    {
-                                        line = sr.ReadLine();
                                         string[] fields = line.Split(",");
 
                                         Route route = new Route();
-                                        
+
                                         route.id = Guid.NewGuid();
-                                        route.route_id = fields[0];
-                                        route.agency_id = fields[1];
+                                        route.route_id = fields[0]; 
+                                        route.agency_id = fields[1].Replace("\"", "");
                                         route.route_short_name = fields[2];
-                                        route.route_long_name = fields[3];
+                                        route.route_long_name = fields[3].Replace("\"", "");
                                         route.route_desc = fields[4];
-                                        route.route_type = fields[5];   
-                                        route.route_url = fields[6];    
+                                        route.route_type = fields[5];
+                                        route.route_url = fields[6];
                                         route.route_color = fields[7];
                                         route.route_text_color = fields[8];
                                         int route_sort_order;
@@ -134,9 +151,13 @@ public class Mississauga : BackgroundService
                                         }
                                         routes.Add(route);
                                     }
+                                    else
+                                    {
+                                        _logger.LogWarning("Line returned was null", new object[0]);
+                                    }
                                 }
+                                WriteRoutes(routes, databaseConnection);
                             }
-                            var xx = 1;
                         }
                     }
                     catch (Exception ex)
