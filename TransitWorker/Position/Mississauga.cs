@@ -10,7 +10,7 @@ using TransitRealtime;
 using TransitWorker.Models;
 using System.Collections.Generic;
 
-namespace TransitWorker;
+namespace TransitWorker.Position;
 
 public class Mississauga : BackgroundService
 {
@@ -76,7 +76,7 @@ public class Mississauga : BackgroundService
         copy.ColumnMappings.Add(nameof(Entity.Created), "Created");
         copy.ColumnMappings.Add(nameof(Entity.Deleted), "Deleted");
 
-        copy.WriteToServer(Extensions.ToDataTable(Entities.ToArray<Entity>()));
+        copy.WriteToServer(Entities.ToArray<Entity>().ToDataTable());
     }
 
 
@@ -88,7 +88,7 @@ public class Mississauga : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("Mississauga running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Position.Mississauga running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {

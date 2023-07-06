@@ -10,7 +10,7 @@ using TransitRealtime;
 using TransitWorker.Models;
 using System.Collections.Generic;
 
-namespace TransitWorker;
+namespace TransitWorker.Position;
 
 public class YRT : BackgroundService
 {
@@ -76,7 +76,7 @@ public class YRT : BackgroundService
         copy.ColumnMappings.Add(nameof(Entity.Created), "Created");
         copy.ColumnMappings.Add(nameof(Entity.Deleted), "Deleted");
 
-        copy.WriteToServer(Extensions.ToDataTable(Entities.ToArray<Entity>()));
+        copy.WriteToServer(Entities.ToArray<Entity>().ToDataTable());
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -87,7 +87,7 @@ public class YRT : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("YRT running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Position.YRT running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {

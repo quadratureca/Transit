@@ -10,7 +10,7 @@ using TransitRealtime;
 using TransitWorker.Models;
 using System.Collections.Generic;
 
-namespace TransitWorker;
+namespace TransitWorker.Position;
 
 public class GoTransit : BackgroundService
 {
@@ -74,7 +74,7 @@ public class GoTransit : BackgroundService
         copy.ColumnMappings.Add(nameof(Entity.Created), "Created");
         copy.ColumnMappings.Add(nameof(Entity.Deleted), "Deleted");
 
-        copy.WriteToServer(Extensions.ToDataTable(Entities.ToArray<Entity>()));
+        copy.WriteToServer(Entities.ToArray<Entity>().ToDataTable());
     }
 
 
@@ -86,7 +86,7 @@ public class GoTransit : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("GoTransit running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Position.GoTransit running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {
