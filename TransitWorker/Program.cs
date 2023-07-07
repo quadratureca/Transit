@@ -7,9 +7,9 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         //services.AddHostedService<TransitWorker.Position.Mississauga>();
+        services.AddHostedService<TransitWorker.Route.Mississauga>();
         //services.AddHostedService<TransitWorker.Position.GoTransit>();
         //services.AddHostedService<TransitWorker.Position.YRT>();
-        services.AddHostedService<TransitWorker.Route.Mississauga>();
     })
     .Build();
 
