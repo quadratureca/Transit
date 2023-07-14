@@ -37,31 +37,31 @@ public class TTC : BackgroundService
         var Entities = new List<Entity>();
         DateTime now = DateTime.UtcNow;
 
-        //foreach (var entity in message.Entities)
-        //{
-        //    Entity e = new Entity
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        //VehicleId = entity.Vehicle.Vehicle.Id,
-        //        AgencyId = "TTC",
-        //        //VehicleLabel = entity.Vehicle.Vehicle.Label,
-        //        //Timestamp = (long)entity.Vehicle.Timestamp,
-        //        //RouteId = entity.Vehicle.Trip.RouteId,
-        //        //DirectionId = entity.Vehicle.Trip.DirectionId,
-        //        //TripId = entity.Vehicle.Trip.TripId,
-        //        //Bearing = entity.Vehicle.Position.Bearing,
-        //        BearingValid = true,
-        //        //Latitude = entity.Vehicle.Position.Latitude,
-        //        //Longitude = entity.Vehicle.Position.Longitude,
-        //        Created = now,
-        //        Deleted = false,
-        //    };
-        //    Entities.Add(e);
-        //}
+        foreach (var entity in message.vehicle)
+        {
+            Entity e = new Entity
+            {
+                Id = Guid.NewGuid(),
+                VehicleId = entity.id,
+                AgencyId = "TTC",
+                VehicleLabel = (entity.dirTag == null ? string.Empty : entity.dirTag),
+                Timestamp = 0L,
+                RouteId = entity.routeTag,
+                DirectionId = 0,
+                TripId = (entity.dirTag == null ? string.Empty : entity.dirTag),
+                Bearing = Convert.ToDouble(entity.heading),
+                BearingValid = true,
+                Latitude = Convert.ToDouble(entity.lat),
+                Longitude = Convert.ToDouble(entity.lon),
+                Created = now,
+                Deleted = false,
+            };
+            Entities.Add(e);
+        }
 
-        var copy = new SqlBulkCopy(databaseConnection);
+    var copy = new SqlBulkCopy(databaseConnection);
 
-        copy.DestinationTableName = "dbo.Entity";
+    copy.DestinationTableName = "dbo.Entity";
         copy.ColumnMappings.Add(nameof(Entity.Id), "Id");
         copy.ColumnMappings.Add(nameof(Entity.AgencyId), "AgencyId");
         copy.ColumnMappings.Add(nameof(Entity.VehicleId), "VehicleId");
@@ -81,72 +81,72 @@ public class TTC : BackgroundService
     }
 
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+{
+    string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=M155155auga?;TrustServerCertificate=true";
+    TTCMessage message;
+    try
     {
-        string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=M155155auga?;TrustServerCertificate=true";
-        TTCMessage message;
-        try
+        HttpClient client = new HttpClient();
+
+        _logger.LogInformation("Position.TTC running at: {time}", DateTimeOffset.Now);
+
+        while (!stoppingToken.IsCancellationRequested)
         {
-            HttpClient client = new HttpClient();
-
-            _logger.LogInformation("Position.TTC running at: {time}", DateTimeOffset.Now);
-
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
+                string ttc = "https://retro.umoiq.com/service/publicJSONFeed?command=vehicleLocations&a=ttc&t=0";
+
                 try
                 {
-                    string ttc = "https://retro.umoiq.com/service/publicJSONFeed?command=vehicleLocations&a=ttc&t=0";
+                    var x = client.GetStreamAsync(ttc);
+                    message = JsonSerializer.Deserialize<TTCMessage>(x.Result);
+                    Parse(message, databaseConnection);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message, new object[0]);
+                }
 
-                    try
-                    {
-                        var x = client.GetStreamAsync(ttc);
-                        message = JsonSerializer.Deserialize<TTCMessage>(x.Result);
-                        Parse(message, databaseConnection);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message, new object[0]);
-                    }
+                //try
+                //{
+                //    var x = client.GetStreamAsync(yrt);
+                //    message = Serializer.Deserialize<FeedMessage>(x.Result);
+                //    GetCity(message, new YRT(), databaseConnection);
+                //}
+                //catch (Exception ex)
+                //{
+                //    _logger.LogError(ex.Message, new object[0]);
+                //}
 
-                    //try
-                    //{
-                    //    var x = client.GetStreamAsync(yrt);
-                    //    message = Serializer.Deserialize<FeedMessage>(x.Result);
-                    //    GetCity(message, new YRT(), databaseConnection);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(ex.Message, new object[0]);
-                    //}
-
-                    try
+                try
+                {
+                    using (TransitContext db = new TransitContext())
                     {
-                        using (TransitContext db = new TransitContext())
-                        {
-                            db.DbConnectionString(databaseConnection);
+                        db.DbConnectionString(databaseConnection);
 
-                            var procs = db.GetProcedures();
-                            procs.DeleteAgedRecordsAsync().Wait();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message, new object[0]);
+                        var procs = db.GetProcedures();
+                        procs.DeleteAgedRecordsAsync().Wait();
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical(ex.Message, new object[0]);
+                    _logger.LogError(ex.Message, new object[0]);
                 }
-                finally
-                {
-                    await Task.Delay(15000, stoppingToken);
-                }
-            } // end while
-        }
-        catch (Exception ex)
-        {
-            _logger.LogCritical(ex.Message, new object[0]);
-        }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message, new object[0]);
+            }
+            finally
+            {
+                await Task.Delay(15000, stoppingToken);
+            }
+        } // end while
     }
+    catch (Exception ex)
+    {
+        _logger.LogCritical(ex.Message, new object[0]);
+    }
+}
 }

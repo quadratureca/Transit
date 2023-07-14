@@ -13,7 +13,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         //services.AddHostedService<TransitWorker.Position.YRT>();
         //services.AddHostedService<TransitWorker.Route.YRT>();
         services.AddHostedService<TransitWorker.Position.TTC>();
-        //services.AddHostedService<TransitWorker.Route.TTC>();
+        services.AddHostedService<TransitWorker.Route.TTC>();
     })
     .Build();
 

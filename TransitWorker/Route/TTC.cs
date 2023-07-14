@@ -113,7 +113,7 @@ public class TTC : BackgroundService
                                         Route route = new Route();
 
                                         route.id = Guid.NewGuid();
-                                        route.route_id = fields[0];
+                                        route.route_id = fields[2];
                                         route.agency_id = "TTC";
                                         route.route_short_name = fields[2];
                                         route.route_long_name = fields[3].Replace("\"", "");
