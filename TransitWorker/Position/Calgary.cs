@@ -12,11 +12,11 @@ using System.Collections.Generic;
 
 namespace TransitWorker.Position;
 
-public class Mississauga : BackgroundService
+public class Calgary : BackgroundService
 {
-    private readonly ILogger<Mississauga> _logger;
+    private readonly ILogger<Calgary> _logger;
 
-    public Mississauga(ILogger<Mississauga> logger)
+    public Calgary(ILogger<Calgary> logger)
     {
         _logger = logger;
     }
@@ -42,7 +42,7 @@ public class Mississauga : BackgroundService
             {
                 Id = Guid.NewGuid(),
                 VehicleId = entity.Vehicle.Vehicle.Id,
-                AgencyId = "mississauga-on-ca",
+                AgencyId = "CT",
                 VehicleLabel = entity.Vehicle.Vehicle.Label,
                 Timestamp = (long)entity.Vehicle.Timestamp,
                 RouteId = entity.Vehicle.Trip.RouteId,
@@ -88,13 +88,13 @@ public class Mississauga : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("Position.Mississauga running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Position.Calgary running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    string mississauga = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
+                    string calgary = "https://data.calgary.ca/download/gs4m-mdc2/application%2Foctet-stream";
                     //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
                     //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
@@ -111,7 +111,7 @@ public class Mississauga : BackgroundService
 
                     try
                     {
-                        var x = client.GetStreamAsync(mississauga);
+                        var x = client.GetStreamAsync(calgary);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
                         Parse(message, databaseConnection);
                     }
