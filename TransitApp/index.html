@@ -94,78 +94,27 @@
             if (bearingValid == true) {
                 ctx.fillStyle = '#' + routeColor;
                 ctx.beginPath();
-                switch (bearing) {
-                    //case 0:
-                    //    ctx.moveTo(24, 0);
-                    //    ctx.lineTo(36, 9);
-                    //    ctx.lineTo(24, 4);
-                    //    ctx.lineTo(12, 9);
-                    //    break;
-                    //case 45:
-                    //    ctx.moveTo(41, 7);
-                    //    ctx.lineTo(43, 22);
-                    //    ctx.lineTo(38, 10);
-                    //    ctx.lineTo(26, 5);
-                    //    break;
-                    //case 90:
-                    //    ctx.moveTo(47, 23);
-                    //    ctx.lineTo(39, 36);
-                    //    ctx.lineTo(43, 24);
-                    //    ctx.lineTo(39, 12);
-                    //    break;
-                    //case 135:
-                    //    ctx.moveTo(41, 41);
-                    //    ctx.lineTo(26, 43);
-                    //    ctx.lineTo(38, 38);
-                    //    ctx.lineTo(43, 26);
-                    //    break;
-                    //case 180:
-                    //    ctx.moveTo(24, 47);
-                    //    ctx.lineTo(12, 39);
-                    //    ctx.lineTo(24, 43);
-                    //    ctx.lineTo(36, 39);
-                    //    break;
-                    //case 225:
-                    //    ctx.moveTo(7, 41);
-                    //    ctx.lineTo(5, 26);
-                    //    ctx.lineTo(10, 38);
-                    //    ctx.lineTo(22, 43);
-                    //    break;
-                    //case 270:
-                    //    ctx.moveTo(0, 24);
-                    //    ctx.lineTo(9, 12);
-                    //    ctx.lineTo(4, 24);
-                    //    ctx.lineTo(9, 36);
-                    //    break;
-                    //case 315:
-                    //    ctx.moveTo(7, 7);
-                    //    ctx.lineTo(22, 5);
-                    //    ctx.lineTo(10, 10);
-                    //    ctx.lineTo(5, 22);
-                    //    break;
-                    default:
-                        // =24+(24*SIN(A3*PI()/180))
-                        let topx = 24 + (24 * Math.sin(bearing * Math.PI / 180));
-                        // =24-(24*COS(A3*PI()/180))
-                        let topy = 24 - (24 * Math.cos(bearing * Math.PI / 180));
-                        // =24+(19.2*SIN((A3+39)*PI()/180))
-                        let rightx = 24 + (19.2 * Math.sin((bearing + 39) * Math.PI / 180));
-                        // =24-(19.2*COS((A3+39)*PI()/180))
-                        let righty = 24 - (19.2 * Math.cos((bearing + 39) * Math.PI / 180));
-                        // =24+(20*SIN(A3*PI()/180))
-                        let bottomx = 24 + (20 * Math.sin(bearing * Math.PI / 180));
-                        // =24-(20*COS(A3*PI()/180))
-                        let bottomy = 24 - (20 * Math.cos(bearing * Math.PI / 180));
-                        // =24+(19.2*SIN((A3-39)*PI()/180))
-                        let leftx = 24 + (19.2 * Math.sin((bearing - 39) * Math.PI / 180));
-                        // =24-(19.2*COS((A3-39)*PI()/180))
-                        let lefty = 24 - (19.2 * Math.cos((bearing - 39) * Math.PI / 180));
-                        ctx.moveTo(topx, topy);
-                        ctx.lineTo(rightx, righty);
-                        ctx.lineTo(bottomx, bottomy);
-                        ctx.lineTo(leftx, lefty);
-                        break;
-                }
+                // =24+(24*SIN(A3*PI()/180))
+                let topx = 24 + (24 * Math.sin(bearing * Math.PI / 180));
+                // =24-(24*COS(A3*PI()/180))
+                let topy = 24 - (24 * Math.cos(bearing * Math.PI / 180));
+                // =24+(19.2*SIN((A3+39)*PI()/180))
+                let rightx = 24 + (19.2 * Math.sin((bearing + 39) * Math.PI / 180));
+                // =24-(19.2*COS((A3+39)*PI()/180))
+                let righty = 24 - (19.2 * Math.cos((bearing + 39) * Math.PI / 180));
+                // =24+(20*SIN(A3*PI()/180))
+                let bottomx = 24 + (20 * Math.sin(bearing * Math.PI / 180));
+                // =24-(20*COS(A3*PI()/180))
+                let bottomy = 24 - (20 * Math.cos(bearing * Math.PI / 180));
+                // =24+(19.2*SIN((A3-39)*PI()/180))
+                let leftx = 24 + (19.2 * Math.sin((bearing - 39) * Math.PI / 180));
+                // =24-(19.2*COS((A3-39)*PI()/180))
+                let lefty = 24 - (19.2 * Math.cos((bearing - 39) * Math.PI / 180));
+                ctx.moveTo(topx, topy);
+                ctx.lineTo(rightx, righty);
+                ctx.lineTo(bottomx, bottomy);
+                ctx.lineTo(leftx, lefty);
+
                 ctx.closePath();
                 ctx.fill();
             }
@@ -210,7 +159,7 @@
                         {
                             icon: L.icon({
                                 iconUrl: createBus(entity.routeShortName, entity.bearing, entity.bearingValid,
-                                                   entity.routeColor, entity.routeTextColor),
+                                    entity.routeColor, entity.routeTextColor),
                                 iconSize: [48, 48],
                                 iconAnchor: [24, 24]
                             }),
