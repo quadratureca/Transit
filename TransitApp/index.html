@@ -21,6 +21,7 @@
     <!--<script src="Content/App.min.js"></script>-->
 
     <script type="text/javascript">
+        let mathPi180 = Math.PI / 180;
         let markerEntity;
         let markerEntities = [];
         let timeoutHandle = null;
@@ -95,21 +96,21 @@
                 ctx.fillStyle = '#' + routeColor;
                 ctx.beginPath();
                 // =24+(24*SIN(A3*PI()/180))
-                let topx = 24 + (24 * Math.sin(bearing * Math.PI / 180));
+                let topx = 24 + (24 * Math.sin(bearing * mathPi180));
                 // =24-(24*COS(A3*PI()/180))
-                let topy = 24 - (24 * Math.cos(bearing * Math.PI / 180));
+                let topy = 24 - (24 * Math.cos(bearing * mathPi180));
                 // =24+(19.2*SIN((A3+39)*PI()/180))
-                let rightx = 24 + (19.2 * Math.sin((bearing + 39) * Math.PI / 180));
+                let rightx = 24 + (19.2 * Math.sin((bearing + 39) * mathPi180));
                 // =24-(19.2*COS((A3+39)*PI()/180))
-                let righty = 24 - (19.2 * Math.cos((bearing + 39) * Math.PI / 180));
+                let righty = 24 - (19.2 * Math.cos((bearing + 39) * mathPi180));
                 // =24+(20*SIN(A3*PI()/180))
-                let bottomx = 24 + (20 * Math.sin(bearing * Math.PI / 180));
+                let bottomx = 24 + (20 * Math.sin(bearing * mathPi180));
                 // =24-(20*COS(A3*PI()/180))
-                let bottomy = 24 - (20 * Math.cos(bearing * Math.PI / 180));
+                let bottomy = 24 - (20 * Math.cos(bearing * mathPi180));
                 // =24+(19.2*SIN((A3-39)*PI()/180))
-                let leftx = 24 + (19.2 * Math.sin((bearing - 39) * Math.PI / 180));
+                let leftx = 24 + (19.2 * Math.sin((bearing - 39) * mathPi180));
                 // =24-(19.2*COS((A3-39)*PI()/180))
-                let lefty = 24 - (19.2 * Math.cos((bearing - 39) * Math.PI / 180));
+                let lefty = 24 - (19.2 * Math.cos((bearing - 39) * mathPi180));
                 ctx.moveTo(topx, topy);
                 ctx.lineTo(rightx, righty);
                 ctx.lineTo(bottomx, bottomy);
