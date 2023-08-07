@@ -100,8 +100,11 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
                 try
                 {
                     var x = client.GetStreamAsync(ttc);
-                    message = JsonSerializer.Deserialize<TTCMessage>(x.Result);
-                    Parse(message, databaseConnection);
+                        if (x != null && x.Result != null)
+                        {
+                            message = JsonSerializer.Deserialize<TTCMessage>(x.Result);
+                            Parse(message, databaseConnection);
+                        }
                 }
                 catch (Exception ex)
                 {
