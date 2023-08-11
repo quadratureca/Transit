@@ -81,7 +81,6 @@
   <ItemGroup>
     <Content Include="Content\App.min.js" />
     <Content Include="Content\LeafletMap.css" />
-    <Content Include="york.html" />
     <Content Include="index.html" />
     <Content Include="Web.config" />
   </ItemGroup>
