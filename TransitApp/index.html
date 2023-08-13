@@ -18,6 +18,7 @@
             crossorigin="">
     </script>
     <!--<script src="Content/App.min.js"></script>-->
+    <script src="Scripts/trig.js"></script>
 
     <script type="text/javascript">
         let mathPi180 = Math.PI / 180;
@@ -25,8 +26,14 @@
         let markerEntities = [];
         let timeoutHandle = null;
         let position;
+        let sin;
+        let cos;
 
         function initialise() {
+            sin = JSON.parse(sinString);
+            cos = JSON.parse(cosString);
+            debugger;
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(getPosition, errorPosition);
             } else {
@@ -63,6 +70,16 @@
 
         function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
             var canvas, ctx;
+            let bearingPlus = bearing + 39;
+            let bearingMinus = bearing - 39;
+
+            if (bearingPlus >= 360) {
+                bearingPlus = bearingPlus - 360;
+            }
+
+            if (bearingMinus < 0) {
+                bearingMinus = bearingMinus + 360;
+            }
 
             if (routeColor == null || routeTextColor == null) {
                 routeColor = '404040';
@@ -95,21 +112,21 @@
                 ctx.fillStyle = '#' + routeColor;
                 ctx.beginPath();
                 // =24+(24*SIN(A3*PI()/180))
-                let topx = 24 + (24 * Math.sin(bearing * mathPi180));
+                let topx = 24 + (24 * sin[bearing]);
                 // =24-(24*COS(A3*PI()/180))
-                let topy = 24 - (24 * Math.cos(bearing * mathPi180));
+                let topy = 24 - (24 * cos[bearing]);
                 // =24+(19.2*SIN((A3+39)*PI()/180))
-                let rightx = 24 + (19.2 * Math.sin((bearing + 39) * mathPi180));
+                let rightx = 24 + (19.2 * sin[bearingPlus]);
                 // =24-(19.2*COS((A3+39)*PI()/180))
-                let righty = 24 - (19.2 * Math.cos((bearing + 39) * mathPi180));
+                let righty = 24 - (19.2 * cos[bearingPlus]);
                 // =24+(20*SIN(A3*PI()/180))
-                let bottomx = 24 + (20 * Math.sin(bearing * mathPi180));
+                let bottomx = 24 + (20 * sin[bearing]);
                 // =24-(20*COS(A3*PI()/180))
-                let bottomy = 24 - (20 * Math.cos(bearing * mathPi180));
+                let bottomy = 24 - (20 * cos[bearing]);
                 // =24+(19.2*SIN((A3-39)*PI()/180))
-                let leftx = 24 + (19.2 * Math.sin((bearing - 39) * mathPi180));
+                let leftx = 24 + (19.2 * sin[bearingMinus]);
                 // =24-(19.2*COS((A3-39)*PI()/180))
-                let lefty = 24 - (19.2 * Math.cos((bearing - 39) * mathPi180));
+                let lefty = 24 - (19.2 * cos[bearingMinus]);
                 ctx.moveTo(topx, topy);
                 ctx.lineTo(rightx, righty);
                 ctx.lineTo(bottomx, bottomy);
