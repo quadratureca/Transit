@@ -109,16 +109,6 @@ public class Calgary : BackgroundService
                         _logger.LogError(ex.Message, new object[0]);
                     }
 
-                    //try
-                    //{
-                    //    var x = client.GetStreamAsync(yrt);
-                    //    message = Serializer.Deserialize<FeedMessage>(x.Result);
-                    //    GetCity(message, new YRT(), databaseConnection);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(ex.Message, new object[0]);
-                    //}
 
                     try
                     {
