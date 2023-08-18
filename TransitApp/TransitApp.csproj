@@ -79,7 +79,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ChatGPT.html" />
     <Content Include="Content\App.min.js" />
     <Content Include="Content\LeafletMap.css" />
     <Content Include="index.html" />
