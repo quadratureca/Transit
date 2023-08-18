@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+<head>
+    <title>ChatGPT App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div id='map' />
+
+
+    <script type="text/javascript">
+        function initialise() {
+
+            const targetNumber = 987;
+            const givenNumbers = [100, 50, 3, 4, 5, 6];
+            const solution = solveCountdownNumbers(targetNumber, givenNumbers);
+
+            if (solution.length > 0) {
+                console.log(`Solution for reaching ${targetNumber}:`);
+                console.log(solution.join(" = "));
+            } else {
+                console.log(`No solution found for reaching ${targetNumber}.`);
+            }
+        }
+        function solveCountdownNumbers(target, numbers) {
+            if (numbers.includes(target)) {
+                return [target.toString()];
+            }
+
+            for (let i = 0; i < numbers.length; i++) {
+                const currentNumber = numbers[i];
+                const remainingNumbers = numbers.slice(0, i).concat(numbers.slice(i + 1));
+
+                const add = solveCountdownNumbers(target - currentNumber, remainingNumbers);
+                if (add.length > 0) {
+                    return [currentNumber + " + " + add[0]].concat(add);
+                }
+
+                if (target % currentNumber === 0) {
+                    const divide = solveCountdownNumbers(target / currentNumber, remainingNumbers);
+                    if (divide.length > 0) {
+                        return [currentNumber + " * " + divide[0]].concat(divide);
+                    }
+                }
+
+                const subtract = solveCountdownNumbers(currentNumber - target, remainingNumbers);
+                if (subtract.length > 0) {
+                    return [currentNumber + " - " + subtract[0]].concat(subtract);
+                }
+
+                const multiply = solveCountdownNumbers(target / currentNumber, remainingNumbers);
+                if (multiply.length > 0) {
+                    return [currentNumber + " / " + multiply[0]].concat(multiply);
+                }
+            }
+
+            return [];
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            initialise();
+        });
+
+    </script>
+</body>
+</html>
