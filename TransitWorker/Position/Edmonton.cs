@@ -42,7 +42,7 @@ public class Edmonton : BackgroundService
             {
                 Id = Guid.NewGuid(),
                 VehicleId = entity.Vehicle.Vehicle.Id,
-                AgencyId = "mississauga-on-ca",
+                AgencyId = "edmonton",
                 VehicleLabel = entity.Vehicle.Vehicle.Label,
                 Timestamp = (long)entity.Vehicle.Timestamp,
                 RouteId = entity.Vehicle.Trip.RouteId,
