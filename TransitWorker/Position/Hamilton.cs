@@ -12,11 +12,11 @@ using System.Collections.Generic;
 
 namespace TransitWorker.Position;
 
-public class Edmonton : BackgroundService
+public class Hamilton : BackgroundService
 {
-    private readonly ILogger<Edmonton> _logger;
+    private readonly ILogger<Hamilton> _logger;
 
-    public Edmonton(ILogger<Edmonton> logger)
+    public Hamilton(ILogger<Hamilton> logger)
     {
         _logger = logger;
     }
@@ -42,7 +42,7 @@ public class Edmonton : BackgroundService
             {
                 Id = Guid.NewGuid(),
                 VehicleId = entity.Vehicle.Vehicle.Id,
-                AgencyId = "edmonton",
+                AgencyId = "HSR",
                 VehicleLabel = entity.Vehicle.Vehicle.Label,
                 Timestamp = (long)entity.Vehicle.Timestamp,
                 RouteId = entity.Vehicle.Trip.RouteId,
@@ -88,15 +88,13 @@ public class Edmonton : BackgroundService
         {
             HttpClient client = new HttpClient();
 
-            _logger.LogInformation("Position.Edmonton running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("Position.Hamilton running at: {time}", DateTimeOffset.Now);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    string edmonton = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb";
-                    //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
-                    //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
+                    string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
                     //try
                     //{
@@ -111,7 +109,7 @@ public class Edmonton : BackgroundService
 
                     try
                     {
-                        var x = client.GetStreamAsync(edmonton);
+                        var x = client.GetStreamAsync(hamilton);
                         message = Serializer.Deserialize<FeedMessage>(x.Result);
                         Parse(message, databaseConnection);
                     }
