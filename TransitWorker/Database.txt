@@ -1,0 +1,269 @@
+﻿USE [Transit]
+GO
+/****** Object:  Table [dbo].[Entity]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Entity](
+	[Id] [uniqueidentifier] NOT NULL,
+	[AgencyId] [nvarchar](50) NOT NULL,
+	[VehicleId] [nvarchar](50) NOT NULL,
+	[VehicleLabel] [nvarchar](50) NOT NULL,
+	[Timestamp] [bigint] NOT NULL,
+	[RouteId] [nvarchar](50) NOT NULL,
+	[DirectionId] [bigint] NOT NULL,
+	[TripId] [nvarchar](50) NOT NULL,
+	[Bearing] [float] NOT NULL,
+	[BearingValid] [bit] NOT NULL,
+	[Latitude] [float] NOT NULL,
+	[Longitude] [float] NOT NULL,
+	[Created] [datetime] NOT NULL,
+	[Deleted] [bit] NOT NULL,
+ CONSTRAINT [PK_Entity] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Route]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Route](
+	[id] [uniqueidentifier] NOT NULL,
+	[route_id] [varchar](50) NULL,
+	[agency_id] [varchar](50) NULL,
+	[route_short_name] [varchar](50) NULL,
+	[route_long_name] [varchar](50) NULL,
+	[route_desc] [varchar](200) NULL,
+	[route_type] [varchar](50) NULL,
+	[route_url] [varchar](200) NULL,
+	[route_color] [varchar](50) NULL,
+	[route_text_color] [varchar](50) NULL,
+	[route_sort_order] [int] NULL,
+	[continuous_pickup] [int] NULL,
+	[continuous_drop_off] [int] NULL,
+ CONSTRAINT [PK_Route] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[routes]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[routes](
+	[route_id] [varchar](50) NULL,
+	[agency_id] [varchar](50) NULL,
+	[route_short_name] [varchar](50) NULL,
+	[route_long_name] [varchar](50) NULL,
+	[route_desc] [varchar](50) NULL,
+	[route_type] [varchar](50) NULL,
+	[route_url] [varchar](50) NULL,
+	[route_color] [varchar](50) NULL,
+	[route_text_color] [varchar](50) NULL,
+	[route_sort_order] [varchar](50) NULL,
+	[continuous_pickup] [varchar](50) NULL,
+	[continuous_drop_off] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Stops]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Stops](
+	[stop_id] [varchar](50) NULL,
+	[stop_code] [varchar](50) NULL,
+	[stop_name] [varchar](50) NULL,
+	[tts_stop_name] [varchar](50) NULL,
+	[stop_desc] [varchar](50) NULL,
+	[stop_lat] [varchar](50) NULL,
+	[stop_lon] [varchar](50) NULL,
+	[zone_id] [varchar](50) NULL,
+	[stop_url] [varchar](50) NULL,
+	[location_type] [varchar](50) NULL,
+	[parent_station] [varchar](50) NULL,
+	[stop_timezone] [varchar](50) NULL,
+	[wheelchair_boarding] [varchar](50) NULL,
+	[level_id] [varchar](50) NULL,
+	[platform_code] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Entity] ADD  CONSTRAINT [DF_Entity_Id_1]  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[Entity] ADD  CONSTRAINT [DF_Entity_Created_1]  DEFAULT (getdate()) FOR [Created]
+GO
+ALTER TABLE [dbo].[Entity] ADD  CONSTRAINT [DF_Entity_Deleted_1]  DEFAULT ((0)) FOR [Deleted]
+GO
+ALTER TABLE [dbo].[Route] ADD  CONSTRAINT [DF_Route_id]  DEFAULT (newid()) FOR [id]
+GO
+/****** Object:  StoredProcedure [dbo].[DeleteAgedRecords]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[DeleteAgedRecords] 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DELETE [dbo].[Entity]
+	WHERE created < DATEADD(MINUTE, -1, GETDATE())
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetRelevantEntities]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetRelevantEntities]
+	@North Float,
+	@East Float,
+	@South Float,
+	@West Float
+AS
+BEGIN
+	SET NOCOUNT ON;
+--	declare @North float = 44, @East float = -79, @South float = 43, @West float = -80;
+
+	--with selector as (
+	--		select max(Created) Created, AgencyId
+	--		FROM [dbo].[Entity] with (nolock)
+	--		group by AgencyId
+	--		)
+
+	with Ranked as (
+		SELECT Id,  RANK() 
+		  OVER (PARTITION BY AgencyId, VehicleId ORDER BY Created DESC) as [rank]
+		  FROM [Transit].[dbo].[Entity]
+		  ) 
+
+		SELECT e.[AgencyId]
+			,e.[VehicleId]
+			,e.[VehicleLabel]
+			,e.[Timestamp]
+			,e.[RouteId]
+			,e.[DirectionId]
+			,e.[TripId]
+			,CAST(e.[Bearing] as int) as [Bearing]
+			,e.[BearingValid] as [BearingValid]
+			,r.route_color as [RouteColor]
+			,r.route_text_color as [RouteTextColor]
+			,r.route_short_name as [RouteShortName]
+			,CASE WHEN e.[AgencyId] IN ('GO') THEN e.[VehicleLabel] 
+			      WHEN e.[AgencyId] IN ('mississauga-on-ca', 'YRT', 'TTC', 'HSR') THEN r.[route_long_name]
+			 END  as [RouteLongName]
+			,CAST(e.[Latitude] as DECIMAL(18,10)) as [Latitude]
+			,CAST(e.[Longitude] as DECIMAL(18,10)) as [Longitude]
+			FROM [dbo].[Entity] e with (nolock)
+			INNER JOIN Ranked
+			ON e.id = Ranked.Id
+			AND Ranked.[rank] = 1
+			LEFT JOIN [dbo].[Route] r with (nolock)
+			ON e.AgencyId = r.agency_id AND
+			e.RouteId = r.route_id
+		WHERE 
+		[Latitude] <= @North AND 
+		[Latitude] >= @South AND
+		[Longitude] <= @East AND 
+		[Longitude] >= @West 
+		
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetRouteIds]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetRouteIds]
+	@agency_id nvarchar(50)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT [id]
+		  ,[route_id]
+		  ,[agency_id]
+		  ,[route_short_name]
+		  ,[route_long_name]
+		  ,[route_desc]
+		  ,[route_type]
+		  ,[route_url]
+		  ,[route_color]
+		  ,[route_text_color]
+		  ,[route_sort_order]
+		  ,[continuous_pickup]
+		  ,[continuous_drop_off]
+	  FROM [Transit].[dbo].[Route] with (nolock)
+      WHERE agency_id = @agency_id
+		
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetStop]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetStop] 
+	@stop_id nvarchar(50)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT [stop_id]
+		  ,[stop_code]
+		  ,[stop_name]
+		  ,[tts_stop_name]
+		  ,[stop_desc]
+		  ,[stop_lat]
+		  ,[stop_lon]
+		  ,[zone_id]
+		  ,[stop_url]
+		  ,[location_type]
+		  ,[parent_station]
+		  ,[stop_timezone]
+		  ,[wheelchair_boarding]
+		  ,[level_id]
+		  ,[platform_code]
+	  FROM [dbo].[Stops]
+	  WHERE [stop_id] = @stop_id
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetStops]    Script Date: 21/08/2023 21:40:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetStops] 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT [stop_id]
+		  ,[stop_code]
+		  ,[stop_name]
+		  ,[tts_stop_name]
+		  ,[stop_desc]
+		  ,[stop_lat]
+		  ,[stop_lon]
+		  ,[zone_id]
+		  ,[stop_url]
+		  ,[location_type]
+		  ,[parent_station]
+		  ,[stop_timezone]
+		  ,[wheelchair_boarding]
+		  ,[level_id]
+		  ,[platform_code]
+	  FROM [dbo].[Stops]
+END
+GO

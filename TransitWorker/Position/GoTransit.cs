@@ -94,7 +94,6 @@ public class GoTransit : BackgroundService
                 {
                     string goTransit = "http://api.openmetrolinx.com/OpenDataAPI/api/V1/Gtfs.proto/Feed/VehiclePosition?key=30023110";
                     //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
-                    //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
 
                     try
