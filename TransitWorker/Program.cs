@@ -6,6 +6,8 @@ IHost host = Host.CreateDefaultBuilder(args)
     .UseSystemd()
     .ConfigureServices(services =>
     {
+        services.AddHostedService<TransitWorker.Position.Burlington>();
+        services.AddHostedService<TransitWorker.Route.Burlington>();
         services.AddHostedService<TransitWorker.Position.Hamilton>();
         services.AddHostedService<TransitWorker.Route.Hamilton>();
         services.AddHostedService<TransitWorker.Route.Mississauga>();
