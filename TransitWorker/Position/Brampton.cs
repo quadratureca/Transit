@@ -86,8 +86,6 @@ public class Brampton : BackgroundService
                 try
                 {
                     string brampton = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
-                    //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
-                    //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
                     //try
                     //{
