@@ -87,17 +87,6 @@ public class Brampton : BackgroundService
                 {
                     string brampton = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
 
-                    //try
-                    //{
-                    //    var x = client.GetStreamAsync(goTransit);
-                    //    message = Serializer.Deserialize<FeedMessage>(x.Result);
-                    //    GetCity(message, new GOTransit(), databaseConnection);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(ex.Message, new object[0]);
-                    //}
-
                     try
                     {
                         var x = client.GetStreamAsync(brampton);
