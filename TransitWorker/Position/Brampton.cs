@@ -85,7 +85,7 @@ public class Brampton : BackgroundService
             {
                 try
                 {
-                    string brampton = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
+                    string brampton = "";
 
                     try
                     {
