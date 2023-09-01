@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+<head>
+    <title>Transit App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <link href="Content/LeafletMap.css" rel="stylesheet" />
+    <link href="Content/reset.css" rel="stylesheet" />
+    <link href="Content/style.css" rel="stylesheet" />
+    <link href="Content/demo.css" rel="stylesheet" />
+    <style>
+        #fireButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <main id='map' class="cd-main-content">
+        <!--<button id="fireButton">Refresh Button</button>-->
+        <a href="#0" class="cd-btn js-cd-panel-trigger" data-panel="main" id="fireButton">Fire Panel</a>
+    </main>
+
+    <div class="cd-panel cd-panel--from-right js-cd-panel-main">
+        <header class="cd-panel__header">
+            <h1>Title Goes Here</h1>
+            <a href="#0" class="cd-panel__close js-cd-close">Close</a>
+        </header>
+
+        <div class="cd-panel__container">
+            <div class="cd-panel__content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam magnam accusamus obcaecati nisi eveniet quo veniam quibusdam veritatis autem accusantium doloribus nam mollitia maxime explicabo nemo quae aspernatur impedit cupiditate dicta molestias consectetur, sint reprehenderit maiores. Tempora, exercitationem, voluptate. Sapiente modi officiis nulla sed ullam, amet placeat, illum necessitatibus, eveniet dolorum et maiores earum tempora, quas iste perspiciatis quibusdam vero accusamus veritatis. Recusandae sunt, repellat incidunt impedit tempore iusto, nostrum eaque necessitatibus sint eos omnis! Beatae, itaque, in. Vel reiciendis consequatur saepe soluta itaque aliquam praesentium, neque tempora. Voluptatibus sit, totam rerum quo ex nemo pariatur tempora voluptatem est repudiandae iusto, architecto perferendis sequi, asperiores dolores doloremque odit. Libero, ipsum fuga repellat quae numquam cumque nobis ipsa voluptates pariatur, a rerum aspernatur aliquid maxime magnam vero dolorum omnis neque fugit laboriosam eveniet veniam explicabo, similique reprehenderit at. Iusto totam vitae blanditiis. Culpa, earum modi rerum velit voluptatum voluptatibus debitis, architecto aperiam vero tempora ratione sint ullam voluptas non! Odit sequi ipsa, voluptatem ratione illo ullam quaerat qui, vel dolorum eligendi similique inventore quisquam perferendis reprehenderit quos officia! Maxime aliquam, soluta reiciendis beatae quisquam. Alias porro facilis obcaecati et id, corporis accusamus? Ab porro fuga consequatur quisquam illo quae quas tenetur.</p>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque similique, at excepturi adipisci repellat ut veritatis officia, saepe nemo soluta modi ducimus velit quam minus quis reiciendis culpa ullam quibusdam eveniet. Dolorum alias ducimus, ad, vitae delectus eligendi, possimus magni ipsam repudiandae iusto placeat repellat omnis veritatis adipisci aliquam hic ullam facere voluptatibus ratione laudantium perferendis quos ut. Beatae expedita, itaque assumenda libero voluptatem adipisci maiores voluptas accusantium, blanditiis saepe culpa laborum iusto maxime quae aperiam fugiat odit consequatur soluta hic. Sed quasi beatae quia repellendus, adipisci facilis ipsa vel, aperiam, consequatur eaque mollitia quaerat. Iusto fugit inventore eveniet velit.</p>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque similique, at excepturi adipisci repellat ut veritatis officia, saepe nemo soluta modi ducimus velit quam minus quis reiciendis culpa ullam quibusdam eveniet. Dolorum alias ducimus, ad, vitae delectus eligendi, possimus magni ipsam repudiandae iusto placeat repellat omnis veritatis adipisci aliquam hic ullam facere voluptatibus ratione laudantium perferendis quos ut. Beatae expedita, itaque assumenda libero voluptatem adipisci maiores voluptas accusantium, blanditiis saepe culpa laborum iusto maxime quae aperiam fugiat odit consequatur soluta hic. Sed quasi beatae quia repellendus, adipisci facilis ipsa vel, aperiam, consequatur eaque mollitia quaerat. Iusto fugit inventore eveniet velit.</p>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam magnam accusamus obcaecati nisi eveniet quo veniam quibusdam veritatis autem accusantium doloribus nam mollitia maxime explicabo nemo quae aspernatur impedit cupiditate dicta molestias consectetur, sint reprehenderit maiores. Tempora, exercitationem, voluptate. Sapiente modi officiis nulla sed ullam, amet placeat, illum necessitatibus, eveniet dolorum et maiores earum tempora, quas iste perspiciatis quibusdam vero accusamus veritatis. Recusandae sunt, repellat incidunt impedit tempore iusto, nostrum eaque necessitatibus sint eos omnis! Beatae, itaque, in. Vel reiciendis consequatur saepe soluta itaque aliquam praesentium, neque tempora. Voluptatibus sit, totam rerum quo ex nemo pariatur tempora voluptatem est repudiandae iusto, architecto perferendis sequi, asperiores dolores doloremque odit. Libero, ipsum fuga repellat quae numquam cumque nobis ipsa voluptates pariatur, a rerum aspernatur aliquid maxime magnam vero dolorum omnis neque fugit laboriosam eveniet veniam explicabo, similique reprehenderit at. Iusto totam vitae blanditiis. Culpa, earum modi rerum velit voluptatum voluptatibus debitis, architecto aperiam vero tempora ratione sint ullam voluptas non! Odit sequi ipsa, voluptatem ratione illo ullam quaerat qui, vel dolorum eligendi similique inventore quisquam perferendis reprehenderit quos officia! Maxime aliquam, soluta reiciendis beatae quisquam. Alias porro facilis obcaecati et id, corporis accusamus? Ab porro fuga consequatur quisquam illo quae quas tenetur.</p>
+            </div> <!-- cd-panel__content -->
+        </div> <!-- cd-panel__container -->
+    </div> <!-- cd-panel -->
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+    </script>
+    <script src="Scripts/trig.js"></script>
+
+    <script type="text/javascript">
+        let markerEntity;
+        let markerEntities = [];
+        let timeoutHandle = null;
+        let position;
+        let sin;
+        let cos;
+
+        function initialise() {
+
+            //let mathPi180 = Math.PI / 180;
+            //let sinArray = Array.apply(null, Array(360));
+            // let cosArray = Array.apply(null, Array(360));
+
+            // for (let i = 0; i < 360; i++) {
+            //     sinArray[i] = Math.trunc(100 * Math.sin(i * mathPi180)) / 100;
+            //     cosArray[i] = Math.trunc(100 * Math.cos(i * mathPi180)) / 100;
+            // }
+
+            // console.log(JSON.stringify(sinArray));
+            // console.log(JSON.stringify(cosArray));
+            //let sinString = JSON.stringify(sinArray);
+            //let cosString = JSON.stringify(cosArray);
+
+
+            sin = JSON.parse(sinString);
+            cos = JSON.parse(cosString);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getPosition, errorPosition);
+            } else {
+                position = [43.55954, -79.72672];
+                createMap();
+            }
+        }
+
+        function getPosition(location) {
+            position = [location.coords.latitude, location.coords.longitude];
+            createMap();
+        }
+
+        function errorPosition() {
+            position = [43.55954, -79.72672];
+            createMap();
+        }
+
+        function createMap() {
+            map = L.map('map', { attributionControl: false, zoomControl: true }).setView(position, 14);
+            L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            }).addTo(map);
+
+            map.addEventListener('moveend', function (event) {
+                if (timeoutHandle != null) {
+                    clearTimeout(timeoutHandle);
+                }
+                timeoutHandle = setTimeout(getUpdateData, 100);
+            });
+
+            markerEntities.length = 0;
+            timeoutHandle = setTimeout(getUpdateData, 100);
+        }
+
+        function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
+            var canvas, ctx;
+            let bearingPlus = bearing + 39;
+            let bearingMinus = bearing - 39;
+
+            if (bearingPlus >= 360) {
+                bearingPlus = bearingPlus - 360;
+            }
+
+            if (bearingMinus < 0) {
+                bearingMinus = bearingMinus + 360;
+            }
+
+            if (routeColor == null || routeTextColor == null) {
+                routeColor = '404040';
+                routeTextColor = 'FFFFFF';
+            }
+
+            canvas = document.createElement("canvas");
+            canvas.width = 48;
+            canvas.height = 48;
+
+            ctx = canvas.getContext("2d");
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.arc(24, 24, 16, 0, Math.PI * 2, 0);
+            ctx.fillStyle = '#' + routeColor;
+            ctx.fill();
+
+            ctx.font = "bold 12px Arial";
+            let text = ctx.measureText(route);
+            let x = (48 - text.width) / 2;
+            let height = text.actualBoundingBoxAscent + text.actualBoundingBoxDescent;
+            let y = (48 + height) / 2;
+
+            ctx.fillStyle = '#' + routeTextColor;
+            ctx.fillText(route, x, y);
+
+            if (bearingValid == true) {
+                ctx.fillStyle = '#' + routeColor;
+                ctx.beginPath();
+                // =24+(24*SIN(A3*PI()/180))
+                let topx = 24 + (24 * sin[bearing]);
+                // =24-(24*COS(A3*PI()/180))
+                let topy = 24 - (24 * cos[bearing]);
+                // =24+(19.2*SIN((A3+39)*PI()/180))
+                let rightx = 24 + (19.2 * sin[bearingPlus]);
+                // =24-(19.2*COS((A3+39)*PI()/180))
+                let righty = 24 - (19.2 * cos[bearingPlus]);
+                // =24+(20*SIN(A3*PI()/180))
+                let bottomx = 24 + (20 * sin[bearing]);
+                // =24-(20*COS(A3*PI()/180))
+                let bottomy = 24 - (20 * cos[bearing]);
+                // =24+(19.2*SIN((A3-39)*PI()/180))
+                let leftx = 24 + (19.2 * sin[bearingMinus]);
+                // =24-(19.2*COS((A3-39)*PI()/180))
+                let lefty = 24 - (19.2 * cos[bearingMinus]);
+                ctx.moveTo(topx, topy);
+                ctx.lineTo(rightx, righty);
+                ctx.lineTo(bottomx, bottomy);
+                ctx.lineTo(leftx, lefty);
+
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            return canvas.toDataURL();
+        }
+
+        async function getTransitData(south, west, north, east) {
+            let bounds = { "South": south, "West": west, "North": north, "East": east };
+
+            var apiUrl = 'https://transit.tripsystem.net/entities?bounds=' + JSON.stringify(bounds);
+
+            const response = await fetch(apiUrl);
+            const entities = await response.json();
+            return entities;
+        }
+
+        function getUpdateData() {
+            timeoutHandle = null;
+            let bounds = map.getBounds();
+
+            getTransitData(bounds._southWest.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._northEast.lng).then(entities => {
+                update(entities);
+            });
+        }
+
+        function update(entities) {
+            let meIndex;
+            let incomingEntities = [];
+            entities.forEach(function (entity, index) {
+                incomingEntities.push(entity);
+            });
+            entities.forEach(function (entity, index) {
+                if (markerEntities.length == 0) {
+                    meIndex = -1;
+                } else {
+                    meIndex = markerEntities.findIndex(mE => mE.Entity.vehicleId == entity.vehicleId);
+                }
+                if (meIndex == -1) {
+                    // Create marker, add marker and entity to markerEntities
+                    let marker = L.marker([entity.latitude, entity.longitude],
+                        {
+                            icon: L.icon({
+                                iconUrl: createBus(entity.routeShortName, entity.bearing, entity.bearingValid,
+                                    entity.routeColor, entity.routeTextColor),
+                                iconSize: [48, 48],
+                                iconAnchor: [24, 24]
+                            }),
+                            entity: JSON.stringify(entity)
+                        }).addTo(map).bindPopup(entity.routeLongName);
+                    markerEntity = { marker: marker, Entity: entity };
+                    markerEntities.push(markerEntity);
+                } else {
+                    // Check if lat and long are unchanged.
+                    // If yes then update markerEntities
+                    // if no then move marker and update markerEntities
+                    let currentMe = markerEntities[meIndex];
+                    if (currentMe.Entity.bearing == entity.bearing &&
+                        currentMe.Entity.longitude == entity.longitude &&
+                        currentMe.Entity.latitude == entity.latitude) {
+                        // Vehicle has not moved - nothing to do except update entity
+                        markerEntities[meIndex].Entity = entity;
+                    } else if (currentMe.Entity.bearing !== entity.bearing) {
+                        // Vehicle has turned - delete and recreate
+                        //currentMe.marker.setMap(null);
+                        map.removeLayer(currentMe.marker);
+                        // Create marker, add marker and entity to markerEntities
+                        let marker = L.marker([entity.latitude, entity.longitude],
+                            {
+                                icon: L.icon({
+                                    iconUrl: createBus(entity.routeShortName, entity.bearing, entity.bearingValid,
+                                        entity.routeColor, entity.routeTextColor),
+                                    iconSize: [48, 48],
+                                    iconAnchor: [24, 24]
+                                }),
+                                entity: JSON.stringify(entity)
+                            }).addTo(map).bindPopup(entity.routeLongName);
+                        markerEntities[meIndex] = { marker: marker, Entity: entity };
+                    } else if (currentMe.Entity.latitude !== entity.latitude ||
+                        currentMe.Entity.longitude !== entity.longitude) {
+                        // Vehicle has moved but not turned
+                        currentMe.marker.setLatLng([entity.latitude, entity.longitude])
+                        markerEntities[meIndex].Entity = entity;
+                    }
+                }
+            });
+
+            // Now check for orphaned markerEntities and remove the marker
+            for (var i = markerEntities.length - 1; i >= 0; i--) {
+                let ieIndex = incomingEntities.findIndex(iE => iE.vehicleId == markerEntities[i].Entity.vehicleId);
+                if (ieIndex == -1) {
+                    map.removeLayer(markerEntities[i].marker);
+                    markerEntities.splice(i, 1);
+                }
+            }
+
+            timeoutHandle = setTimeout(getUpdateData, 15000);
+        }
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            initialise();
+        });
+
+    </script>
+    <script src="Scripts/main.js"></script>
+</body>
+</html>

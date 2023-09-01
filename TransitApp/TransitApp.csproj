@@ -80,8 +80,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\App.min.js" />
+    <Content Include="Content\demo.css" />
     <Content Include="Content\LeafletMap.css" />
+    <Content Include="Content\reset.css" />
+    <Content Include="Content\style.css" />
+    <Content Include="newindex.html" />
     <Content Include="index.html" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\trig.js" />
     <Content Include="Web.config" />
   </ItemGroup>
