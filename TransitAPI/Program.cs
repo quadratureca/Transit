@@ -85,6 +85,22 @@ namespace TransitAPI
             .WithName("GetEntities")
             .WithOpenApi();
 
+            app.MapGet("/agencies", (HttpContext httpContext) =>
+            {
+                List<Agency> agencies = new List<Agency>();
+
+                using (var x = new TransitContext(contextOptions))
+                {
+                    var y = x.GetProcedures();
+                    agencies = y.GetAgenciesAsync()
+                    .GetAwaiter().GetResult();
+                }
+                return agencies;
+            })
+            .WithName("GetAgencies")
+            .WithOpenApi();
+
+
             app.Run();
         }
     }

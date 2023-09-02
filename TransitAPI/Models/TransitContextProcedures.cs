@@ -34,6 +34,7 @@ namespace TransitAPI.Models
 
         protected void OnModelCreatingGeneratedProcedures(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Agency>().HasNoKey().ToView(null);
             modelBuilder.Entity<Entity>().HasNoKey().ToView(null);
         }
     }
@@ -45,6 +46,26 @@ namespace TransitAPI.Models
         public TransitContextProcedures(TransitContext context)
         {
             _context = context;
+        }
+
+        public virtual async Task<List<Agency>> GetAgenciesAsync(OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        {
+            var parameterreturnValue = new SqlParameter
+            {
+                ParameterName = "returnValue",
+                Direction = System.Data.ParameterDirection.Output,
+                SqlDbType = System.Data.SqlDbType.Int,
+            };
+
+            var sqlParameters = new []
+            {
+                parameterreturnValue,
+            };
+            var _ = await _context.SqlQueryAsync<Agency>("EXEC @returnValue = [dbo].[GetAgencies]", sqlParameters, cancellationToken);
+
+            returnValue?.SetValue(parameterreturnValue.Value);
+
+            return _;
         }
 
         public virtual async Task<List<Entity>> GetRelevantEntitiesAsync(double? North, double? East, double? South, double? West, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)

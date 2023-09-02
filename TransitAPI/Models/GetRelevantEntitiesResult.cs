@@ -20,9 +20,7 @@ namespace TransitAPI.Models
         public string RouteTextColor { get; set; }
         public string RouteShortName { get; set; }
         public string RouteLongName { get; set; }
-        [Column(TypeName = "decimal(18,10)")]
         public decimal? Latitude { get; set; }
-        [Column(TypeName = "decimal(18,10)")]
         public decimal? Longitude { get; set; }
     }
 }

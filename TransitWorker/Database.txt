@@ -1,6 +1,88 @@
-﻿USE [Transit]
+﻿USE [master]
 GO
-/****** Object:  Table [dbo].[Entity]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  Database [Transit]    Script Date: 01/09/2023 22:39:34 ******/
+CREATE DATABASE [Transit]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'Transit', FILENAME = N'/var/opt/mssql/data/Transit.mdf' , SIZE = 532480KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'Transit_log', FILENAME = N'/var/opt/mssql/data/Transit_log.ldf' , SIZE = 1187840KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+ALTER DATABASE [Transit] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [Transit].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [Transit] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [Transit] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [Transit] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [Transit] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [Transit] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [Transit] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [Transit] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [Transit] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [Transit] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [Transit] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [Transit] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [Transit] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [Transit] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [Transit] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [Transit] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [Transit] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [Transit] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [Transit] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [Transit] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [Transit] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [Transit] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [Transit] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [Transit] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [Transit] SET  MULTI_USER 
+GO
+ALTER DATABASE [Transit] SET PAGE_VERIFY NONE  
+GO
+ALTER DATABASE [Transit] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [Transit] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [Transit] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [Transit] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [Transit] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'Transit', N'ON'
+GO
+ALTER DATABASE [Transit] SET QUERY_STORE = OFF
+GO
+USE [Transit]
+GO
+/****** Object:  Table [dbo].[Entity]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -26,7 +108,7 @@ CREATE TABLE [dbo].[Entity](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Route]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  Table [dbo].[Route]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -51,7 +133,7 @@ CREATE TABLE [dbo].[Route](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[routes]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  Table [dbo].[routes]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -71,7 +153,7 @@ CREATE TABLE [dbo].[routes](
 	[continuous_drop_off] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Stops]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  Table [dbo].[Stops]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -102,7 +184,7 @@ ALTER TABLE [dbo].[Entity] ADD  CONSTRAINT [DF_Entity_Deleted_1]  DEFAULT ((0)) 
 GO
 ALTER TABLE [dbo].[Route] ADD  CONSTRAINT [DF_Route_id]  DEFAULT (newid()) FOR [id]
 GO
-/****** Object:  StoredProcedure [dbo].[DeleteAgedRecords]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  StoredProcedure [dbo].[DeleteAgedRecords]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -117,7 +199,24 @@ BEGIN
 	WHERE created < DATEADD(MINUTE, -1, GETDATE())
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetRelevantEntities]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetAgencies]    Script Date: 01/09/2023 22:39:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetAgencies]
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT DISTINCT [AgencyId]
+	FROM [Transit].[dbo].[Entity]
+	order by AgencyId
+  
+END
+GO
+/****** Object:  StoredProcedure [dbo].[GetRelevantEntities]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -158,7 +257,7 @@ BEGIN
 			,r.route_text_color as [RouteTextColor]
 			,r.route_short_name as [RouteShortName]
 			,CASE WHEN e.[AgencyId] IN ('GO') THEN e.[VehicleLabel] 
-			      WHEN e.[AgencyId] IN ('mississauga-on-ca', 'YRT', 'TTC', 'HSR') THEN r.[route_long_name]
+			      WHEN e.[AgencyId] IN ('mississauga-on-ca', 'YRT', 'TTC', 'HSR', 'Burlington') THEN r.[route_long_name]
 			 END  as [RouteLongName]
 			,CAST(e.[Latitude] as DECIMAL(18,10)) as [Latitude]
 			,CAST(e.[Longitude] as DECIMAL(18,10)) as [Longitude]
@@ -177,7 +276,7 @@ BEGIN
 		
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetRouteIds]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetRouteIds]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -207,7 +306,7 @@ BEGIN
 		
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetStop]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetStop]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -238,7 +337,7 @@ BEGIN
 	  WHERE [stop_id] = @stop_id
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetStops]    Script Date: 21/08/2023 21:40:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetStops]    Script Date: 01/09/2023 22:39:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -266,4 +365,8 @@ BEGIN
 		  ,[platform_code]
 	  FROM [dbo].[Stops]
 END
+GO
+USE [master]
+GO
+ALTER DATABASE [Transit] SET  READ_WRITE 
 GO
