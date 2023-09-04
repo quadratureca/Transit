@@ -172,10 +172,10 @@
             //let sinString = JSON.stringify(sinArray);
             //let cosString = JSON.stringify(cosArray);
 
+            getAgencyData();
 
             sin = JSON.parse(sinString);
             cos = JSON.parse(cosString);
-            debugger;
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(getPosition, errorPosition);
@@ -209,11 +209,11 @@
                 if (timeoutHandle != null) {
                     clearTimeout(timeoutHandle);
                 }
-                timeoutHandle = setTimeout(getUpdateData, 100);
+                timeoutHandle = setTimeout(getEntityData, 100);
             });
 
             markerEntities.length = 0;
-            timeoutHandle = setTimeout(getUpdateData, 100);
+            timeoutHandle = setTimeout(getEntityData, 100);
         }
 
         function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
@@ -287,7 +287,30 @@
             return canvas.toDataURL();
         }
 
-        async function getTransitData(south, west, north, east) {
+        function getAgencyData() {
+            getAgencyDataAsync().then(agencies => {
+                console.log(agencies);
+            });
+        }
+
+        async function getAgencyDataAsync() {
+            var apiUrl = 'https://transit.tripsystem.net/agencies';
+
+            const response = await fetch(apiUrl);
+            const agencies = await response.json();
+            return agencies;
+        }
+
+        function getEntityData() {
+            timeoutHandle = null;
+            let bounds = map.getBounds();
+
+            getEntityDataAsync(bounds._southWest.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._northEast.lng).then(entities => {
+                update(entities);
+            });
+        }
+
+        async function getEntityDataAsync(south, west, north, east) {
             let bounds = { "South": south, "West": west, "North": north, "East": east };
 
             var apiUrl = 'https://transit.tripsystem.net/entities?bounds=' + JSON.stringify(bounds);
@@ -295,15 +318,6 @@
             const response = await fetch(apiUrl);
             const entities = await response.json();
             return entities;
-        }
-
-        function getUpdateData() {
-            timeoutHandle = null;
-            let bounds = map.getBounds();
-
-            getTransitData(bounds._southWest.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._northEast.lng).then(entities => {
-                update(entities);
-            });
         }
 
         function update(entities) {
@@ -376,7 +390,7 @@
                 }
             }
 
-            timeoutHandle = setTimeout(getUpdateData, 15000);
+            timeoutHandle = setTimeout(getEntityData, 15000);
         }
 
     </script>
