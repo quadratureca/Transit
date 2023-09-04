@@ -1,0 +1,9 @@
+[Unit]
+Description=TransitWorker
+
+[Service]
+Type=notify
+ExecStart=/home/ubuntu/TransitWorker/TransitWorker
+
+[Install]
+WantedBy=multi-user.target

@@ -82,7 +82,6 @@
     <Content Include="Content\App.min.js" />
     <Content Include="Content\leaflet-sidepanel.css" />
     <Content Include="Content\LeafletMap.css" />
-    <Content Include="newindex.html" />
     <Content Include="index.html" />
     <Content Include="Scripts\leaflet-sidepanel.js" />
     <Content Include="Scripts\trig.js" />

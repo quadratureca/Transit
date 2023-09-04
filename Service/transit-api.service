@@ -1,0 +1,14 @@
+[Unit]
+Description=Transit-API
+
+[Service]
+WorkingDirectory=/home/ubuntu/TransitAPI 
+ExecStart=/home/ubuntu/TransitAPI/TransitAPI
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=transit-api
+
+[Install]
+WantedBy=multi-user.target
