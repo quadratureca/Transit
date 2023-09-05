@@ -93,19 +93,6 @@ public class Oakville : BackgroundService
                 try
                 {
                     string oakville = "https://busfinder.oakvilletransit.ca/gtfsrt/vehicles";
-                    //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
-                    //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
-
-                    //try
-                    //{
-                    //    var x = client.GetStreamAsync(goTransit);
-                    //    message = Serializer.Deserialize<FeedMessage>(x.Result);
-                    //    GetCity(message, new GOTransit(), databaseConnection);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(ex.Message, new object[0]);
-                    //}
 
                     try
                     {
