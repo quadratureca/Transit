@@ -141,6 +141,7 @@
             </div>
         </div>
     </div>
+    <script src="Scripts/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin="">
@@ -155,6 +156,7 @@
         let position;
         let sin;
         let cos;
+        let selectedAgencies = [];
 
         function initialise() {
 
@@ -173,6 +175,16 @@
             //let cosString = JSON.stringify(cosArray);
 
             getAgencyData();
+
+            $(document).on("change", ".agency", function (e) {
+                selectedAgencies = [];
+                $(".agency").each(function() {
+                    console.log($(this).attr("name"), $(this).prop("checked"));
+                    if ($(this).prop("checked")) {
+                        selectedAgencies.push($(this).attr("name"));
+                    }
+                });
+            });
 
             sin = JSON.parse(sinString);
             cos = JSON.parse(cosString);
@@ -289,7 +301,7 @@
 
         function getAgencyData() {
             getAgencyDataAsync().then(agencies => {
-                console.log(agencies);
+                populatePanel(agencies);
             });
         }
 
@@ -299,6 +311,32 @@
             const response = await fetch(apiUrl);
             const agencies = await response.json();
             return agencies;
+        }
+
+        function populatePanel(agencies) {
+            console.log(agencies);
+            let table = $("<table>");
+            let tr;
+            let td1, td2;
+            let label;
+            let input;
+
+            agencies.forEach(function (agency, index) {
+                let id = agency.agencyId;
+                let tr = $("<tr>");
+                table.append(tr);
+                let td1 = $("<td>");
+                let td2 = $("<td>");
+                let input = $("<input>");
+                input.attr("type", "checkbox").attr("id", id).attr("name", id).attr("value", id).attr("class", "agency");
+                let label = $("<label>");
+                label.attr("for", id).text(id);
+                td1.append(input);
+                td2.append(label);
+                tr.append(td1).append(td2);
+                table.append(tr);
+            });
+            $(".sidepanel-tab-content").empty().append(table);
         }
 
         function getEntityData() {
@@ -323,43 +361,20 @@
         function update(entities) {
             let meIndex;
             let incomingEntities = [];
+
             entities.forEach(function (entity, index) {
-                incomingEntities.push(entity);
+                if ($.inArray(entity.agencyId, selectedAgencies) !== -1) {
+                    incomingEntities.push(entity);
+                }
             });
             entities.forEach(function (entity, index) {
-                if (markerEntities.length == 0) {
-                    meIndex = -1;
-                } else {
-                    meIndex = markerEntities.findIndex(mE => mE.Entity.vehicleId == entity.vehicleId);
-                }
-                if (meIndex == -1) {
-                    // Create marker, add marker and entity to markerEntities
-                    let marker = L.marker([entity.latitude, entity.longitude],
-                        {
-                            icon: L.icon({
-                                iconUrl: createBus(entity.routeShortName, entity.bearing, entity.bearingValid,
-                                    entity.routeColor, entity.routeTextColor),
-                                iconSize: [48, 48],
-                                iconAnchor: [24, 24]
-                            }),
-                            entity: JSON.stringify(entity)
-                        }).addTo(map).bindPopup(entity.routeLongName);
-                    markerEntity = { marker: marker, Entity: entity };
-                    markerEntities.push(markerEntity);
-                } else {
-                    // Check if lat and long are unchanged.
-                    // If yes then update markerEntities
-                    // if no then move marker and update markerEntities
-                    let currentMe = markerEntities[meIndex];
-                    if (currentMe.Entity.bearing == entity.bearing &&
-                        currentMe.Entity.longitude == entity.longitude &&
-                        currentMe.Entity.latitude == entity.latitude) {
-                        // Vehicle has not moved - nothing to do except update entity
-                        markerEntities[meIndex].Entity = entity;
-                    } else if (currentMe.Entity.bearing !== entity.bearing) {
-                        // Vehicle has turned - delete and recreate
-                        //currentMe.marker.setMap(null);
-                        map.removeLayer(currentMe.marker);
+                if ($.inArray(entity.agencyId, selectedAgencies) !== -1) {
+                    if (markerEntities.length == 0) {
+                        meIndex = -1;
+                    } else {
+                        meIndex = markerEntities.findIndex(mE => mE.Entity.vehicleId == entity.vehicleId);
+                    }
+                    if (meIndex == -1) {
                         // Create marker, add marker and entity to markerEntities
                         let marker = L.marker([entity.latitude, entity.longitude],
                             {
@@ -371,12 +386,40 @@
                                 }),
                                 entity: JSON.stringify(entity)
                             }).addTo(map).bindPopup(entity.routeLongName);
-                        markerEntities[meIndex] = { marker: marker, Entity: entity };
-                    } else if (currentMe.Entity.latitude !== entity.latitude ||
-                        currentMe.Entity.longitude !== entity.longitude) {
-                        // Vehicle has moved but not turned
-                        currentMe.marker.setLatLng([entity.latitude, entity.longitude])
-                        markerEntities[meIndex].Entity = entity;
+                        markerEntity = { marker: marker, Entity: entity };
+                        markerEntities.push(markerEntity);
+                    } else {
+                        // Check if lat and long are unchanged.
+                        // If yes then update markerEntities
+                        // if no then move marker and update markerEntities
+                        let currentMe = markerEntities[meIndex];
+                        if (currentMe.Entity.bearing == entity.bearing &&
+                            currentMe.Entity.longitude == entity.longitude &&
+                            currentMe.Entity.latitude == entity.latitude) {
+                            // Vehicle has not moved - nothing to do except update entity
+                            markerEntities[meIndex].Entity = entity;
+                        } else if (currentMe.Entity.bearing !== entity.bearing) {
+                            // Vehicle has turned - delete and recreate
+                            //currentMe.marker.setMap(null);
+                            map.removeLayer(currentMe.marker);
+                            // Create marker, add marker and entity to markerEntities
+                            let marker = L.marker([entity.latitude, entity.longitude],
+                                {
+                                    icon: L.icon({
+                                        iconUrl: createBus(entity.routeShortName, entity.bearing, entity.bearingValid,
+                                            entity.routeColor, entity.routeTextColor),
+                                        iconSize: [48, 48],
+                                        iconAnchor: [24, 24]
+                                    }),
+                                    entity: JSON.stringify(entity)
+                                }).addTo(map).bindPopup(entity.routeLongName);
+                            markerEntities[meIndex] = { marker: marker, Entity: entity };
+                        } else if (currentMe.Entity.latitude !== entity.latitude ||
+                            currentMe.Entity.longitude !== entity.longitude) {
+                            // Vehicle has moved but not turned
+                            currentMe.marker.setLatLng([entity.latitude, entity.longitude])
+                            markerEntities[meIndex].Entity = entity;
+                        }
                     }
                 }
             });
@@ -401,7 +444,5 @@
         });
 
     </script>
-    </div>
-    </div>
 </body>
 </html>
