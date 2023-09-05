@@ -38,23 +38,21 @@ public class Oakville : BackgroundService
 
         foreach (var entity in message.Entities)
         {
-            Entity e = new Entity
-            {
-                Id = Guid.NewGuid(),
-                VehicleId = entity.Vehicle.Vehicle.Id,
-                AgencyId = "Oakville Transit",
-                VehicleLabel = entity.Vehicle.Vehicle.Label,
-                Timestamp = (long)entity.Vehicle.Timestamp,
-                RouteId = entity.Vehicle.Trip.RouteId,
-                DirectionId = entity.Vehicle.Trip.DirectionId,
-                TripId = (entity.Vehicle.Trip == null || entity.Vehicle.Trip.TripId == null) ? string.Empty : entity.Vehicle.Trip.TripId,
-                Bearing = entity.Vehicle.Position.Bearing,
-                BearingValid = true,
-                Latitude = entity.Vehicle.Position.Latitude,
-                Longitude = entity.Vehicle.Position.Longitude,
-                Created = now,
-                Deleted = false,
-            };
+            Entity e = new Entity();
+            e.Id = Guid.NewGuid();
+            e.VehicleId = entity.Vehicle.Vehicle.Id;
+            e.AgencyId = "Oakville";
+            e.VehicleLabel = entity.Vehicle.Vehicle.Label;
+            e.Timestamp = (long)entity.Vehicle.Timestamp;
+            e.RouteId = (entity.Vehicle.Trip == null || entity.Vehicle.Trip.RouteId == null) ? string.Empty : entity.Vehicle.Trip.RouteId;
+            e.DirectionId = (entity.Vehicle.Trip == null || entity.Vehicle.Trip.DirectionId == null) ? 0L : entity.Vehicle.Trip.DirectionId;
+            e.TripId = (entity.Vehicle.Trip == null || entity.Vehicle.Trip.TripId == null) ? string.Empty : entity.Vehicle.Trip.TripId;
+            e.Bearing = entity.Vehicle.Position.Bearing;
+            e.BearingValid = true;
+            e.Latitude = entity.Vehicle.Position.Latitude;
+            e.Longitude = entity.Vehicle.Position.Longitude;
+            e.Created = now;
+            e.Deleted = false;
             Entities.Add(e);
         }
 

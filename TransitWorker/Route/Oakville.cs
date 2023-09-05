@@ -113,8 +113,8 @@ public class Oakville : BackgroundService
                                         Route route = new Route();
 
                                         route.id = Guid.NewGuid();
-                                        route.route_id = fields[0]; 
-                                        route.agency_id = fields[1].Replace("\"", "");
+                                        route.route_id = fields[0];
+                                        route.agency_id = "Oakville"; // fields[1].Replace("\"", "");
                                         route.route_short_name = fields[2];
                                         route.route_long_name = fields[3].Replace("\"", "");
                                         route.route_desc = fields[4];
@@ -122,33 +122,9 @@ public class Oakville : BackgroundService
                                         route.route_url = fields[6];
                                         route.route_color = fields[7];
                                         route.route_text_color = fields[8];
-                                        int route_sort_order;
-                                        if (int.TryParse(fields[9], out route_sort_order) && route_sort_order != 0)
-                                        {
-                                            route.route_sort_order = route_sort_order;
-                                        }
-                                        else
-                                        {
-                                            route.route_sort_order = 0;
-                                        }
-                                        int continuous_pickup;
-                                        if (int.TryParse(fields[10], out continuous_pickup) && continuous_pickup != 0)
-                                        {
-                                            route.continuous_pickup = continuous_pickup;
-                                        }
-                                        else
-                                        {
-                                            route.continuous_pickup = 0;
-                                        }
-                                        int continuous_drop_off;
-                                        if (int.TryParse(fields[11], out continuous_drop_off) && continuous_drop_off != 0)
-                                        {
-                                            route.continuous_drop_off = continuous_drop_off;
-                                        }
-                                        else
-                                        {
-                                            route.continuous_drop_off = 0;
-                                        }
+                                        route.route_sort_order = 0;
+                                        route.continuous_pickup = 0;
+                                        route.continuous_drop_off = 0;
                                         routes.Add(route);
                                     }
                                     else
