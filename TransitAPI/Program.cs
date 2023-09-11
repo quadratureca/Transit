@@ -20,16 +20,16 @@ namespace TransitAPI
             var contextOptions = new DbContextOptionsBuilder<TransitContext>()
                 .UseSqlServer(connectionString).Options;
 
-            //builder.Services.AddCors(options =>
-            //{
-            //    options.AddPolicy(MyAllowSpecificOrigins,
-            //                          policy =>
-            //                          {
-            //                              policy.AllowAnyHeader()
-            //                                    .AllowAnyMethod()
-            //                                    .AllowAnyOrigin();
-            //                          });
-            //});
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                                      policy =>
+                                      {
+                                          policy.AllowAnyHeader()
+                                                .AllowAnyMethod()
+                                                .AllowAnyOrigin();
+                                      });
+            });
 
             // Add services to the container.
             builder.Services.AddAuthorization();
@@ -55,7 +55,7 @@ namespace TransitAPI
 
             app.UseHttpsRedirection();
 
-            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

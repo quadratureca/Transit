@@ -178,7 +178,7 @@
 
             $(document).on("change", ".agency", function (e) {
                 selectedAgencies = [];
-                $(".agency").each(function() {
+                $(".agency").each(function () {
                     console.log($(this).attr("name"), $(this).prop("checked"));
                     if ($(this).prop("checked")) {
                         selectedAgencies.push($(this).attr("name"));
@@ -221,11 +221,11 @@
                 if (timeoutHandle != null) {
                     clearTimeout(timeoutHandle);
                 }
-                timeoutHandle = setTimeout(getEntityData, 100);
+                timeoutHandle = setTimeout(newGetEntityData, 100);
             });
 
             markerEntities.length = 0;
-            timeoutHandle = setTimeout(getEntityData, 100);
+            timeoutHandle = setTimeout(newGetEntityData, 100);
         }
 
         function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
@@ -306,7 +306,8 @@
         }
 
         async function getAgencyDataAsync() {
-            var apiUrl = 'https://transit.tripsystem.net/agencies';
+            //let apiUrl = 'https://transit.tripsystem.net/agencies';
+            let apiUrl = 'https://localhost:7239/agencies';
 
             const response = await fetch(apiUrl);
             const agencies = await response.json();
@@ -338,6 +339,38 @@
             });
             $(".sidepanel-tab-content").empty().append(table);
         }
+
+        function newGetEntityData() {
+            let bounds = map.getBounds();
+            let param = {
+                "South": bounds._southWest.lat, "West": bounds._southWest.lng,
+                "North": bounds._northEast.lat, "East": bounds._northEast.lng
+            };
+            // let apiUrl = 'https://transit.tripsystem.net/entities?bounds=' + JSON.stringify(param);
+            let apiUrl = 'https://localhost:7239/entities?bounds=' + JSON.stringify(param);
+
+            // Make a GET request to the API
+            fetch(apiUrl)
+                .then(response => {
+                    // Check if the response status is OK (200)
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Parse the JSON response
+                    return response.json();
+                })
+                .then(data => {
+                    // Do something with the data from the API
+                    // console.log(data);
+                    update(data);
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+
 
         function getEntityData() {
             timeoutHandle = null;
@@ -433,7 +466,7 @@
                 }
             }
 
-            timeoutHandle = setTimeout(getEntityData, 15000);
+            timeoutHandle = setTimeout(newGetEntityData, 15000);
         }
 
     </script>
