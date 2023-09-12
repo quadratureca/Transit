@@ -299,21 +299,6 @@
             return canvas.toDataURL();
         }
 
-        //function getAgencyData() {
-        //    getAgencyDataAsync().then(agencies => {
-        //        populatePanel(agencies);
-        //    });
-        //}
-
-        //async function getAgencyDataAsync() {
-        //    //let apiUrl = 'https://transit.tripsystem.net/agencies';
-        //    let apiUrl = 'https://localhost:7239/agencies';
-
-        //    const response = await fetch(apiUrl);
-        //    const agencies = await response.json();
-        //    return agencies;
-        //}
-
         function populatePanel(agencies) {
             console.log(agencies);
             let table = $("<table>");
