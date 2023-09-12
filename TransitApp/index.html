@@ -221,11 +221,11 @@
                 if (timeoutHandle != null) {
                     clearTimeout(timeoutHandle);
                 }
-                timeoutHandle = setTimeout(newGetEntityData, 100);
+                timeoutHandle = setTimeout(getEntityData, 100);
             });
 
             markerEntities.length = 0;
-            timeoutHandle = setTimeout(newGetEntityData, 100);
+            timeoutHandle = setTimeout(getEntityData, 100);
         }
 
         function createBus(route, bearing, bearingValid, routeColor, routeTextColor) {
@@ -299,20 +299,20 @@
             return canvas.toDataURL();
         }
 
-        function getAgencyData() {
-            getAgencyDataAsync().then(agencies => {
-                populatePanel(agencies);
-            });
-        }
+        //function getAgencyData() {
+        //    getAgencyDataAsync().then(agencies => {
+        //        populatePanel(agencies);
+        //    });
+        //}
 
-        async function getAgencyDataAsync() {
-            //let apiUrl = 'https://transit.tripsystem.net/agencies';
-            let apiUrl = 'https://localhost:7239/agencies';
+        //async function getAgencyDataAsync() {
+        //    //let apiUrl = 'https://transit.tripsystem.net/agencies';
+        //    let apiUrl = 'https://localhost:7239/agencies';
 
-            const response = await fetch(apiUrl);
-            const agencies = await response.json();
-            return agencies;
-        }
+        //    const response = await fetch(apiUrl);
+        //    const agencies = await response.json();
+        //    return agencies;
+        //}
 
         function populatePanel(agencies) {
             console.log(agencies);
@@ -340,7 +340,36 @@
             $(".sidepanel-tab-content").empty().append(table);
         }
 
-        function newGetEntityData() {
+        function getAgencyData() {
+            //let apiUrl = 'https://transit.tripsystem.net/agencies';
+            let apiUrl = 'https://localhost:7239/agencies';
+
+            // Make a GET request to the API
+            fetch(apiUrl)
+                .then(response => {
+                    // Check if the response status is OK (200)
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Parse the JSON response
+                    return response.json();
+                })
+                .then(agencies => {
+                    // Do something with the data from the API
+                    // console.log(data);
+                    populatePanel(agencies);
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('There was a problem with the fetch operation:', error);
+                })
+                .finally(() => {
+                    console.log('Experiment completed');
+                });
+
+        }
+
+        function getEntityData() {
             let bounds = map.getBounds();
             let param = {
                 "South": bounds._southWest.lat, "West": bounds._southWest.lng,
@@ -367,29 +396,14 @@
                 .catch(error => {
                     // Handle errors
                     console.error('There was a problem with the fetch operation:', error);
+                })
+                .finally(() => {
+                    console.log('Experiment completed');
                 });
         }
 
 
 
-        function getEntityData() {
-            timeoutHandle = null;
-            let bounds = map.getBounds();
-
-            getEntityDataAsync(bounds._southWest.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._northEast.lng).then(entities => {
-                update(entities);
-            });
-        }
-
-        async function getEntityDataAsync(south, west, north, east) {
-            let bounds = { "South": south, "West": west, "North": north, "East": east };
-
-            var apiUrl = 'https://transit.tripsystem.net/entities?bounds=' + JSON.stringify(bounds);
-
-            const response = await fetch(apiUrl);
-            const entities = await response.json();
-            return entities;
-        }
 
         function update(entities) {
             let meIndex;
@@ -466,7 +480,7 @@
                 }
             }
 
-            timeoutHandle = setTimeout(newGetEntityData, 15000);
+            timeoutHandle = setTimeout(getEntityData, 15000);
         }
 
     </script>
