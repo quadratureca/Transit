@@ -362,23 +362,17 @@
             // let apiUrl = 'https://transit.tripsystem.net/entities?bounds=' + JSON.stringify(param);
             let apiUrl = 'https://localhost:7239/entities?bounds=' + JSON.stringify(param);
 
-            // Make a GET request to the API
             fetch(apiUrl)
                 .then(response => {
-                    // Check if the response status is OK (200)
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    // Parse the JSON response
                     return response.json();
                 })
                 .then(data => {
-                    // Do something with the data from the API
-                    // console.log(data);
                     update(data);
                 })
                 .catch(error => {
-                    // Handle errors
                     console.error('There was a problem with the fetch operation:', error);
                 })
                 .finally(() => {
