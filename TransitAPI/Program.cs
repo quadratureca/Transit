@@ -104,7 +104,6 @@ namespace TransitAPI
             .WithName("GetAgencies")
             .WithOpenApi();
 
-
             app.Run();
         }
     }
