@@ -22,15 +22,6 @@ public class Oakville : BackgroundService
     }
 
 
-    //static void GetCity(FeedMessage message, IParser parser, string databaseConnection)
-    //{
-    //    IParser cityParser = parser as IParser;
-    //    if (cityParser != null)
-    //    {
-    //        cityParser.Parse(message, databaseConnection);
-    //    }
-    //}
-
     static void Parse(FeedMessage message, string databaseConnection)
     {
         var Entities = new List<Entity>();
