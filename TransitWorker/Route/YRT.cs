@@ -66,7 +66,7 @@ public class YRT : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=a1b2c3d4e5?;TrustServerCertificate=true";
+        string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=M155155auga?;TrustServerCertificate=true";
         Stream data;
         List<Route> routes = new List<Route>();
         string line;
@@ -81,7 +81,7 @@ public class YRT : BackgroundService
             {
                 try
                 {
-                    string YRT = "https://www.yrt.ca/google/google_transit.zip";
+                    string YRT = "http://www.yrt.ca/google/google_transit.zip";
 
                     try
                     {

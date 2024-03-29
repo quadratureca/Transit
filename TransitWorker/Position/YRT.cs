@@ -81,7 +81,7 @@ public class YRT : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=a1b2c3d4e5?;TrustServerCertificate=true";
+        string databaseConnection = @"Data Source=quadrature.ca;Initial Catalog=Transit;Persist Security Info=True;User ID=sa;Password=M155155auga?;TrustServerCertificate=true";
         FeedMessage message;
         try
         {
@@ -94,7 +94,7 @@ public class YRT : BackgroundService
                 try
                 {
                     //string mississauga = "https://www.miapp.ca/GTFS_RT/Vehicle/VehiclePositions.pb";
-                    string yrt = "https://rtu.york.ca/gtfsrealtime/VehiclePositions";
+                    string yrt = "http://rtu.york.ca/gtfsrealtime/VehiclePositions";
                     //string barrie = "http://www.myridebarrie.ca/gtfs/GTFS_TripUpdates.pb";
                     //string hamilton = "https://opendata.hamilton.ca/GTFS-RT/GTFS_VehiclePositions.pb";
 
