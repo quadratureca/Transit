@@ -81,7 +81,7 @@ public class YRT : BackgroundService
             {
                 try
                 {
-                    string YRT = "http://www.yrt.ca/google/google_transit.zip";
+                    string YRT = "http://www.yrt.ca/google/google_transit.zip"; // http?
 
                     try
                     {
